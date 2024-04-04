@@ -1,7 +1,8 @@
-import Login from "./Screens/LoginScreen/Login";
+// import Login from "./Screens/LoginScreen/Login";
+import StudentForm from "./Screens/StudentScreen/StudentForm";
 
 function App() {
-  return <Login />;
+  return <StudentForm/>;
 }
 
 export default App;
