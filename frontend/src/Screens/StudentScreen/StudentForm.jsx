@@ -1,20 +1,76 @@
-import React, { useState } from "react";
-import ResumeUpload from "../../Components/ResumeUpload";
+import React, { useState, useRef } from "react";
+// import ResumeUpload from "../../Components/ResumeUpload";
+import axios from "axios";
 
 function StudentForm() {
-  const [userData, setUserData] = useState({ name: "", email: "", phone: "",resume: undefined});
+  const [userData, setUserData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    resume: undefined,
+  });
 
-  const onSubmitHandler = (e) => {
+  const onSubmitHandler = async (e) => {
     e.preventDefault();
-    console.log(userData);
-    setUserData({name: "",email: "", password: "", phone: "" });
+    const data = new FormData();
+    data.append("name", userData.name);
+    data.append("email", userData.email);
+    data.append("phone", userData.phone);
+    data.append("resume", userData.resume);
+    fileInputRef.current.files = null;
+    fileInputRef.current.dispatchEvent(new Event("change", { bubbles: true }));
+    setFileName(null);
+    setUserData({ name: "", email: "", password: "", phone: "", resume: null });
+    try {
+      const res = await axios.post(
+        "http://localhost:5000/api/v1/upload",
+        data,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
   };
-  const handleUpdateResume = (file) => {
-     setUserData(prev=>({...prev,resume: file}));
-  }
+
   const onChangeHandler = (e) => {
     setUserData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
+
+  const [fileName, setFileName] = useState("");
+  const fileInputRef = useRef(null);
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+  };
+
+  const handleDragEnter = (e) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files[0];
+    setFileName(file.name);
+    setUserData((prev) => ({ ...prev, resume: file }));
+    if (fileInputRef) {
+      fileInputRef.current.files = e.dataTransfer.files;
+      fileInputRef.current.dispatchEvent(
+        new Event("change", { bubbles: true })
+      );
+    }
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setFileName(file.name);
+    setUserData((prev) => ({ ...prev, resume: file }));
+  };
+
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -29,12 +85,7 @@ function StudentForm() {
       </div>
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form
-          className="space-y-6"
-          action="#"
-          method="POST"
-          onSubmit={onSubmitHandler}
-        >
+        <form className="space-y-6" onSubmit={onSubmitHandler}>
           {/* user name */}
           <div>
             <label
@@ -53,7 +104,7 @@ function StudentForm() {
                 onChange={(e) => {
                   onChangeHandler(e);
                 }}
-                required
+                // required
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
             </div>
@@ -78,7 +129,7 @@ function StudentForm() {
                 onChange={(e) => {
                   onChangeHandler(e);
                 }}
-                required
+                // required
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
             </div>
@@ -106,16 +157,51 @@ function StudentForm() {
                   onChangeHandler(e);
                 }}
                 autoComplete="current-phone"
-                required
+                // required
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
             </div>
           </div>
           {/* phone number end */}
 
-          {/* upload resume start */}       
-          <ResumeUpload onResumeUpdate={handleUpdateResume}/>
-
+          {/* upload resume start */}
+          {/* <ResumeUpload onResumeUpdate={handleUpdateResume}/> */}
+          <div className="col-span-full">
+            <label
+              htmlFor="resume"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
+              Upload Resume
+            </label>
+            <div
+              className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10"
+              onDragOver={handleDragOver}
+              onDragEnter={handleDragEnter}
+              onDrop={handleDrop}
+            >
+              <div className="text-center">
+                <div className="mt-4 flex text-sm leading-6 text-gray-600">
+                  <label
+                    htmlFor="file-upload"
+                    className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
+                  >
+                    <span>Upload a file</span>
+                    <input
+                      ref={fileInputRef}
+                      id="file-upload"
+                      name="file-upload"
+                      type="file"
+                      className="sr-only"
+                      required
+                      onChange={handleFileChange}
+                    />
+                  </label>
+                  <p className="pl-1">or drag and drop</p>
+                </div>
+                <p className="text-xs leading-5 text-gray-600">{fileName}</p>
+              </div>
+            </div>
+          </div>
           {/* upload resume end */}
 
           {/* submit button start */}

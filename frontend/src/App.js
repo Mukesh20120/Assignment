@@ -2,6 +2,7 @@
 import StudentForm from "./Screens/StudentScreen/StudentForm";
 
 function App() {
+
   return <StudentForm/>;
 }
 
