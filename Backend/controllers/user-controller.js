@@ -47,7 +47,13 @@ const getAllStudentData = asyncWrapper(async(req,res)=>{
 
 const downloadResumePdf = asyncWrapper(async(req,res)=>{
       const {id} = req.params;
+      if(!id){
+        throw new customApiError.NotFoundError('Please enter valid data')
+      }
       const studentInfo = await Students.findOne({_id: id});
+      if(!studentInfo){
+        throw new customApiError.NotFoundError('Wrong link download failed')
+      }
       const {resume: {path,filename}} = studentInfo;
       res.setHeader('Content-Disposition', `attachment; filename=${filename}`);
       res.setHeader('Content-Type', 'application/pdf');
