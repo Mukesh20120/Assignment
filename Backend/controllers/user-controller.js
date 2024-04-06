@@ -18,31 +18,30 @@ const login = asyncWrapper(async (req, res) => {
             role: (await User.countDocuments() === 0) ? "staff" : "student"
         };
         const newUser = await User.create(userData);
-        return res.status(200).json({ msg: "New user created successfully", email: newUser.email, role: newUser.role });
+        return res.status(200).json({status: "success", msg: "New user created successfully"});
     }
     if (!user) {
         throw new customApiError.NotFoundError("User not registered.");
     }
-    if (!user.matchPassword(password)) {
-        throw new customApiError.UnauthenticatedError("Wrong password.");
+    if (!(await user.matchPassword(password))) {
+        throw new customApiError.UnAuthenticated("Wrong password.");
     }
     const token = generateToken({ id: user._id, role: user.role });
-    res.status(200).json({ msg: 'Login successful', email: user.email, role: user.role, token });
+    res.status(200).json({status: "success", msg: 'Login successfully', email: user.email, role: user.role, token });
 });
 
 const studentData = asyncWrapper(async(req,res)=>{
-    const {filename,path} = req.file;
-    const {email,name,phone} = req.body;
+    const {filename,path} = req.file || {};
+    const {email,name,phone} = req.body || {};
     if(!filename || !path || !email || !name || !phone){
         throw new customApiError.NotFoundError("Please enter valid data");
     }
     const result = await Students.create({email,name,phone,resume: {filename,path},user: req.user.id});
-    res.status(200).json({msg: "success",result});
+    res.status(200).json({status: "success",msg: "Upload Successfully"});
 })
 
 const getAllStudentData = asyncWrapper(async(req,res)=>{
-   console.log(req.user);
-   const studentsInfo = await Students.find({}).select("-user -resume.path");
+   const studentsInfo = await Students.find({}).select("-user -resume.path").sort({ createdAt: -1 });
    res.status(200).json(studentsInfo);
 })
 

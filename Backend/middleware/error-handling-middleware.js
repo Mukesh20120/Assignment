@@ -18,7 +18,7 @@ const errorHandlingMiddleware = (err,req,res,next)=>{
     customError.msg = `No value find with id: ${err.value}`;
     customError.statusCode = 400
   }
-  res.status(customError.statusCode).json({msg: customError.msg});
+  res.status(customError.statusCode).json({status: "fail",msg: customError.msg});
 }
 
 module.exports = errorHandlingMiddleware;

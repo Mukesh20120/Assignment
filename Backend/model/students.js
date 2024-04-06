@@ -3,24 +3,24 @@ const mongoose = require('mongoose');
 const studentSchema = mongoose.Schema({
     name: {
         type: String,
-        // required: true
+        required: true
     },
     email: {
         type: String,
-        // required: true
+        required: true
     },
     phone: {
         type: Number,
-        // required: true
+        required: true
     },
     resume: {
         filename: {
             type: String,
-            // required: true
+            required: true
         },
         path: {
             type: String,
-            // required: true
+            required: true
         }
     },
     user: {

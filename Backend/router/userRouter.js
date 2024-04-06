@@ -5,9 +5,8 @@ const {authentication,authorizeRole} = require('../middleware/authentication-mid
 
 
 router.post('/login',login);
-router.post('/upload',upload.single('resume'),authentication,studentData);
-router.get('/data',getAllStudentData);
-router.get('/download/:id',downloadResumePdf);
-// router.get('/data',[authentication,authorizeRole("staff")],getAllStudentData);
+router.post('/upload',upload.single('resume'),authentication,authorizeRole("student"),studentData);
+router.get('/download/:id',[authentication,authorizeRole("staff")],downloadResumePdf);
+router.get('/data',[authentication,authorizeRole("staff")],getAllStudentData);
 
 module.exports = router;
