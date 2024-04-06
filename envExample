@@ -1,0 +1,3 @@
+MONGO_DB=your MONGO_DB url
+JWT_SECRET=W7JBPggbLAjF2wTzsterai48tup
+PORT = 5000
