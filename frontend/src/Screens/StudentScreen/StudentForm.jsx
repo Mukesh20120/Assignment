@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import Header from "../../Components/Header";
 import { uploadStudentData } from "../../services/apiFunction";
-import {toast} from "react-toastify"
+import { toast } from "react-toastify";
 
 function StudentForm() {
   const [userData, setUserData] = useState({
@@ -23,10 +23,9 @@ function StudentForm() {
     setFileName(null);
     setUserData({ name: "", email: "", password: "", phone: "", resume: null });
     try {
-     const res = await uploadStudentData(data);
-     const {status,msg} = res.data;
-     if(status==="success")
-       toast.success(msg);
+      const res = await uploadStudentData(data);
+      const { status, msg } = res.data;
+      if (status === "success") toast.success(msg);
     } catch (error) {
       if (error.response && error.response.data && error.response.data.msg) {
         toast.error(error.response.data.msg);
@@ -52,20 +51,33 @@ function StudentForm() {
   const handleDrop = (e) => {
     e.preventDefault();
     const file = e.dataTransfer.files[0];
-    setFileName(file.name);
-    setUserData((prev) => ({ ...prev, resume: file }));
-    if (fileInputRef) {
-      fileInputRef.current.files = e.dataTransfer.files;
-      fileInputRef.current.dispatchEvent(
-        new Event("change", { bubbles: true })
-      );
+    const allowedTypes = ["application/pdf"];
+
+    if (file && allowedTypes.includes(file.type)) {
+      setFileName(file.name);
+      setUserData((prev) => ({ ...prev, resume: file }));
+      if (fileInputRef) {
+        fileInputRef.current.files = e.dataTransfer.files;
+        fileInputRef.current.dispatchEvent(
+          new Event("change", { bubbles: true })
+        );
+      }
+    } else {
+      toast.error("Please upload a PDF file.");
+      e.dataTransfer.files = null;
     }
   };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    setFileName(file.name);
-    setUserData((prev) => ({ ...prev, resume: file }));
+    const allowedTypes = ["application/pdf"];
+    if (file && allowedTypes.includes(file.type)) {
+      setFileName(file.name);
+      setUserData((prev) => ({ ...prev, resume: file }));
+    } else {
+      toast.error("Please upload a PDF file.");
+      e.target.files = null;
+    }
   };
 
   return (
