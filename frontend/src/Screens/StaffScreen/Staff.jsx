@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import RowCard from "../../Components/RowCard";
 import { getAllStudentData } from "../../services/apiFunction";
 import Header from "../../Components/Header";
+import {toast} from "react-toastify"
 
 function Staff() {
     const createStudentObject = (name,email,phone,resume,id,date,time) =>{
@@ -26,7 +27,9 @@ const time = dateObj.toLocaleTimeString();
        });
        setUsersData(result);
       }catch(error){
-        console.log(error);
+        if (error.response && error.response.data && error.response.data.msg) {
+          toast.error(error.response.data.msg);
+        }
       }
     }
     fetchData();

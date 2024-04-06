@@ -3,24 +3,31 @@ import { login } from "../../services/apiFunction";
 import { setAuthToken } from "../../services";
 import { useNavigate } from "react-router-dom";
 import Header from "../../Components/Header";
+import {toast} from "react-toastify"
 
 function Login() {
   const [userData, setUserData] = useState({ email: "", password: "" });
   const navigate = useNavigate();
+
   const onSubmitHandler = async (e) => {
     e.preventDefault();
     try {
       const res = await login(userData);
-      const { token, role } = await res.data;
+      const { token,role,status,msg } = await res.data;
       //  localStorage.setItem("userData",JSON.stringify({token,role}));
+      if(status === "success")
+        toast.success(msg);
       setAuthToken(token);
       const redirectPath = `/${role}`;
       navigate(redirectPath);
     } catch (error) {
-      console.log(error);
+      if (error.response && error.response.data && error.response.data.msg) {
+        toast.error(error.response.data.msg);
+      }
     }
     setUserData({ email: "", password: "" });
   };
+
   const onChangeHandler = (e) => {
     setUserData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };

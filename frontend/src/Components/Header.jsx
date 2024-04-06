@@ -1,11 +1,13 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
 import { setAuthToken } from '../services';
-import {useNavigate} from "react-router-dom"
+import {useNavigate} from "react-router-dom";
+import {toast} from "react-toastify"
 
 function Header({show}) {
     const navigate = useNavigate();
     const handleOnClick = () =>{
+        toast.success('User logout')
         localStorage.removeItem('userData');
         setAuthToken(null);
         navigate('/');
@@ -18,7 +20,7 @@ function Header({show}) {
                     <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Resume@Hub</span>
                 </Link>
                {show && <div className="flex items-center space-x-6 rtl:space-x-reverse">
-                    <p  className="text-sm text-gray-500 dark:text-white hover:underline" onClick={handleOnClick}>Logout</p>
+                    <p  className="text-sm text-gray-500 dark:text-white cursor-pointer" onClick={handleOnClick}>Logout</p>
                 </div>}
             </div>
         </nav>

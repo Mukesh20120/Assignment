@@ -1,5 +1,6 @@
 import React from 'react'
 import { downloadResume } from '../services/apiFunction';
+import {toast} from "react-toastify"
 
 function RowCard({rowData}) {
     const onClickHandler = async() =>{
@@ -20,8 +21,11 @@ function RowCard({rowData}) {
       
             // Cleanup
             link.parentNode.removeChild(link);
+            toast.success("Download Successfully")
           } catch (error) {
-            console.error('Error downloading PDF:', error);
+            if (error.response && error.response.data && error.response.data.msg) {
+              toast.error(error.response.data.msg);
+            }
           }
     }
   return (
@@ -38,7 +42,7 @@ function RowCard({rowData}) {
     <td className="px-6 py-4">{`${rowData.date} ${rowData.time}`}</td>
     <td className="px-6 py-4 text-right">
       <p
-        className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+        className="font-medium text-blue-600 dark:text-blue-500 cursor-pointer"
         onClick={onClickHandler}
       >
       Download
