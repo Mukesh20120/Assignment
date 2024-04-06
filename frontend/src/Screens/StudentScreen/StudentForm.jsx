@@ -19,8 +19,7 @@ function StudentForm() {
     data.append("phone", userData.phone);
     data.append("resume", userData.resume);
     fileInputRef.current.files = null;
-    fileInputRef.current.dispatchEvent(new Event("change", { bubbles: true }));
-    setFileName(null);
+    setFileName("");
     setUserData({ name: "", email: "", password: "", phone: "", resume: null });
     try {
       const res = await uploadStudentData(data);
@@ -64,7 +63,6 @@ function StudentForm() {
       }
     } else {
       toast.error("Please upload a PDF file.");
-      e.dataTransfer.files = null;
     }
   };
 
@@ -83,19 +81,19 @@ function StudentForm() {
   return (
     <div>
       <Header show={true} />
-      <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+      <div className="flex min-h-full flex-1 flex-col justify-center px-3 py-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <img
             className="mx-auto h-10 w-auto"
             src="https://e7.pngegg.com/pngimages/712/814/png-clipart-computer-icons-student-academic-degree-graduation-ceremony-student-people-logo-thumbnail.png"
             alt="Resume Portal"
           />
-          <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+          <h2 className="mt-5 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900 uppercase">
             Student Form
           </h2>
         </div>
 
-        <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+        <div className=" sm:mx-auto sm:w-full sm:max-w-sm">
           <form className="space-y-6" onSubmit={onSubmitHandler}>
             {/* user name */}
             <div>
@@ -103,9 +101,9 @@ function StudentForm() {
                 htmlFor="email"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
-                User name
+                User name<span className="text-red-500">*</span>
               </label>
-              <div className="mt-2">
+              <div className="mt-1">
                 <input
                   id="name"
                   name="name"
@@ -128,9 +126,9 @@ function StudentForm() {
                 htmlFor="email"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
-                Email
+                Email<span className="text-red-500">*</span>
               </label>
-              <div className="mt-2">
+              <div className="mt-1">
                 <input
                   id="email"
                   name="email"
@@ -154,10 +152,10 @@ function StudentForm() {
                   htmlFor="phone"
                   className="block text-sm font-medium leading-6 text-gray-900"
                 >
-                  Contact Number
+                  Contact Number<span className="text-red-500">*</span>
                 </label>
               </div>
-              <div className="mt-2">
+              <div className="mt-1">
                 <input
                   id="phone"
                   name="phone"
@@ -182,10 +180,11 @@ function StudentForm() {
                 htmlFor="resume"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
-                Upload Resume
+                {fileName===""?"Upload Resume":fileName}
+                {fileName==="" && <span className="text-red-500">*</span>}
               </label>
               <div
-                className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10"
+                className="mt-1 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10"
                 onDragOver={handleDragOver}
                 onDragEnter={handleDragEnter}
                 onDrop={handleDrop}
@@ -209,7 +208,7 @@ function StudentForm() {
                     </label>
                     <p className="pl-1">or drag and drop</p>
                   </div>
-                  <p className="text-xs leading-5 text-gray-600">{fileName}</p>
+                  <p className="text-xs leading-5 text-gray-600">{fileName===""?"upload file in pdf format only":fileName}</p>
                 </div>
               </div>
             </div>

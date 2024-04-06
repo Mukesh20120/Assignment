@@ -45,9 +45,10 @@ function Staff() {
   return (
     <div className="w-100">
       <Header show={true} />
-      <div className="d-flex justify-center align-items-center my-7 w-full">
-        <h1>Staff Webpage </h1>
+      <div className="flex justify-center items-center my-7 w-full">
+        <h1 className="text-3xl font-bold uppercase ">Staff Webpage</h1>
       </div>
+
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -68,7 +69,7 @@ function Staff() {
                 Date And Time
               </th>
               <th scope="col" className="px-6 py-3">
-                <span className="sr-only">Download link</span>
+                Download link
               </th>
             </tr>
           </thead>

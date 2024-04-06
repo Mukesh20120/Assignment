@@ -18,8 +18,10 @@ function Login() {
       if(status === "success")
         toast.success(msg);
       setAuthToken(token);
-      const redirectPath = `/${role}`;
-      navigate(redirectPath);
+     if(role){
+       const redirectPath = `/${role}`;
+       navigate(redirectPath);
+      }
     } catch (error) {
       if (error.response && error.response.data && error.response.data.msg) {
         toast.error(error.response.data.msg);
@@ -58,7 +60,7 @@ function Login() {
                 htmlFor="email"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
-                Email address
+                Email address<span className="text-red-500">*</span>
               </label>
               <div className="mt-2">
                 <input
@@ -82,7 +84,7 @@ function Login() {
                   htmlFor="password"
                   className="block text-sm font-medium leading-6 text-gray-900"
                 >
-                  Password
+                  Password<span className="text-red-500">*</span>
                 </label>
               </div>
               <div className="mt-2">
