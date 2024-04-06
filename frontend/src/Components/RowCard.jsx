@@ -6,20 +6,12 @@ function RowCard({rowData}) {
     const onClickHandler = async() =>{
         try {
             const response = await downloadResume(rowData.id);
-      
-            // Create a blob URL from the response data
             const url = window.URL.createObjectURL(new Blob([response.data]));
-      
-            // Create a temporary anchor element
             const link = document.createElement('a');
             link.href = url;
             link.setAttribute('download', `${rowData.resume}`);
             document.body.appendChild(link);
-      
-            // Trigger the download
             link.click();
-      
-            // Cleanup
             link.parentNode.removeChild(link);
             toast.success("Download Successfully")
           } catch (error) {
