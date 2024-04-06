@@ -1,19 +1,12 @@
 import React, { useEffect, useState } from "react";
 import RowCard from "../../Components/RowCard";
 import { getAllStudentData } from "../../services/apiFunction";
+import Header from "../../Components/Header";
 
 function Staff() {
-    const createStudentObject = (name,email,phone,resume,id) =>{
-        return {name,email,phone,resume,id};
+    const createStudentObject = (name,email,phone,resume,id,date,time) =>{
+        return {name,email,phone,resume,id,date,time};
     }
-    // const usersData = [
-    //     { name: "random", email: "random@gmail.com", phone: "9473592332", resume: "cv.pdf" },
-    //     { name: "John Doe", email: "johndoe@example.com", phone: "1234567890", resume: "john_doe_resume.pdf" },
-    //     { name: "Alice Smith", email: "alice.smith@example.com", phone: "9876543210", resume: "alice_smith_resume.pdf" },
-    //     { name: "Bob Johnson", email: "bob.johnson@example.com", phone: "5555555555", resume: "bob_johnson_resume.pdf" },
-    //     { name: "Emma Brown", email: "emma.brown@example.com", phone: "3333333333", resume: "emma_brown_resume.pdf" },
-    //     { name: "Michael Lee", email: "michael.lee@example.com", phone: "9999999999", resume: "michael_lee_resume.pdf" }
-    // ];
     const [usersData,setUsersData] = useState([]);
  useEffect(()=>{
     const fetchData = async() =>{
@@ -21,11 +14,16 @@ function Staff() {
        const res = await getAllStudentData();
        const fetchData = await res.data;
        const result = fetchData.map((data)=>{
-        const {name,email,phone,resume,_id: id} = data;
+        const {name,email,phone,resume,_id: id,createdAt} = data;
         const resumeFile = resume.filename.split('#')[1];
-        return createStudentObject(name,email,phone,resumeFile,id);
+        const dateObj = new Date(createdAt);
+
+const date = dateObj.toLocaleDateString();
+
+
+const time = dateObj.toLocaleTimeString();
+        return createStudentObject(name,email,phone,resumeFile,id,date,time);
        });
-       console.log(result);
        setUsersData(result);
       }catch(error){
         console.log(error);
@@ -36,7 +34,8 @@ function Staff() {
     
   return (
     <div className="w-100">
-      <div className="d-flex justify-center align-items-center ">
+      <Header show={true}/>
+      <div className="d-flex justify-center align-items-center my-7 w-full">
         <h1>Staff Webpage </h1>
       </div>
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -54,6 +53,9 @@ function Staff() {
               </th>
               <th scope="col" className="px-6 py-3">
                 Resume
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Date And Time
               </th>
               <th scope="col" className="px-6 py-3">
                 <span className="sr-only">Download link</span>

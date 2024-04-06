@@ -35,6 +35,7 @@ function RowCard({rowData}) {
     <td className="px-6 py-4">{rowData.email}</td>
     <td className="px-6 py-4">{rowData.phone}</td>
     <td className="px-6 py-4">{rowData.resume}</td>
+    <td className="px-6 py-4">{`${rowData.date} ${rowData.time}`}</td>
     <td className="px-6 py-4 text-right">
       <p
         className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
