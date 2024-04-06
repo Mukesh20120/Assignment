@@ -6,4 +6,10 @@
 
 4.run "npm install" in root directory and in frontend directory
 
-5.In root directory run cmd "npm run dev" to start the project :)
+5.In root directory run cmd "npm run dev" to start the project 
+
+6.first time login will create user the first user will be staff/admin
+
+7.second time login will create student/user 
+
+8.now you can login in :)
